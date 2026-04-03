@@ -1,0 +1,18 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 ***README***\
+This repository contains the code necessary to reproduce the data and figures in the associated paper.\
+To use it, first run the \'93pheno_dormancy.R\'94 file. This will define the relevant functions, including the simulation loop (which can be run from the \'93simulation()\'94 function). \
+\
+Next, run the \'93leslie_matrix_calculations.R\'94 file, which initializes the default parameter values, and defines the  \'93vbmax_equibpop_determination()\'94 function, which solves for the value of vbmax which will produce an equilibrium population at the given parameters, as well as solving for the equilibrium  population (\'93popul\'94).\
+\
+From here, the rest of the scripts can be run, although paths will need to be re-specified. The file name for the included data provides the number of replicates (e.g., \'93200\'94 or \'9350\'94) and the seed (e.g. \'931\'94) to generate that data. In some cases this data is included in the script. The script to generate the data for figure 1 can be found in the folder for its plot.\
+\
+For each plot, the script can be found in the \'93plots folder\'94. I have also included the PowerPoints used to edit each figure.\
+\
+If you have any questions, feel free to contact me at ijordan@vt.edu. I have tried to provide a reasonable level of comments in the code, but undoubtedly there remain many potentially confusing stumbling blocks.}
