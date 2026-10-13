@@ -1,14 +1,14 @@
     library(doParallel)
     library(flock)
     # setwd("Users/isaiahjordan/Documents/Phenotypic_dormancy_output/pulse_intensity")
-    setwd('~/Documents/GitHub/publication_model/results/')
+    setwd('~/Documents/GitHub/publication_model/pulse/')
     registerDoParallel(cores = 5)
     # param_space = seq()
-    param_space = seq(2,6,.5)
+    param_space = seq(2,8,.05)
     d_r = .01
     max_time = 3501
     first_pulse = 1
-    reps = 200
+    reps = 500
     fn = paste('pulse_intensity',reps, Sys.time(),'.txt')
     param_fn = paste('pulse_intesity_params',reps, Sys.time(),'.txt')
     first_pulse = 1
@@ -50,7 +50,7 @@
                       seeds[(l-1)*reps+i])
           rep_row = t(rep_row)
           locked = flock::lock(fn)
-          locked = flock::lock(param_fn)
+          locked_param = flock::lock(param_fn)
           write.table(env_pars,file = param_fn,append = T,col.names = F,row.names = F,sep = ',')
           write.table(rep_row,file = fn,append = T,col.names = F,row.names = F,sep = ',')
           flock::unlock(locked)
@@ -59,10 +59,11 @@
                       seeds[(l-1)*reps+i])
           rep_row = t(rep_row)
           locked = flock::lock(fn)
-          locked = flock::lock(param_fn)
+          locked_param = flock::lock(param_fn)
           write.table(env_pars,file = param_fn,append = T,col.names = F,row.names = F,sep = ',')
           write.table(rep_row,file = fn,append = T,col.names = F,row.names = F,sep = ',')
           flock::unlock(locked)
+          flock::unlock(locked_param)
         }
         }
         
@@ -87,10 +88,11 @@
                       seeds[(l-1)*reps+i])
           rep_row = t(rep_row)
           locked = flock::lock(fn)
-          locked = flock::lock(param_fn)
+          locked_param = flock::lock(param_fn)
           write.table(env_pars,file = param_fn,append = T,col.names = F,row.names = F,sep = ',')
           write.table(rep_row,file = fn,append = T,col.names = F,row.names = F,sep = ',')
           flock::unlock(locked)
+          flock::unlock(locked_param)
         } else {
           rep_row = c(0,param_space[l],i,tail(pulse$times,1),dormancy_rate,
                       seeds[(l-1)*reps+i])

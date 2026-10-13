@@ -1,7 +1,7 @@
   library(doParallel)
   library(flock)
-  reps = 50
-  seed  = 4
+  reps = 500
+  seed  = 1
   setwd("~/Documents/GitHub/publication_model/hetero_cost/")
   registerDoParallel(cores = 5)
   
@@ -14,9 +14,9 @@
   first_pulse = 1
   max_time = 3501
   # costs = c(1,10)
-  costs = seq(.001,15,.5)
+  costs = seq(.001,15,.25)
   # hetero_rates = c(9.5e-4,2e-3)
-  hetero_rates = seq(0,.0015,.03125e-2)
+  hetero_rates = seq(0,.0015,0.00015625)
 
   
   ##prep seeds

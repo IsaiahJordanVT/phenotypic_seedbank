@@ -1,25 +1,12 @@
   library(ggplot2)
   library(cowplot)
   library(Hmisc)
-      results = read.csv("~/Documents/GitHub/publication_model/interval/interval 200 2025-12-01 15:41:38.606259 .csv",header = F)
-      results2 = read.csv('~/Documents/GitHub/publication_model/interval/interval 2 200 2026-01-21 16:19:58.414365 .csv',header = F)
-      results3 = read.csv('~/Documents/GitHub/publication_model/interval/interval 3 200 2026-02-04 15:31:33.21195 .csv',header = F)
-      results4 = read.csv('~/Documents/GitHub/publication_model/interval/interval 4 200 2026-01-21 16:29:16 .csv',header = F)
-      short_results1 = read.csv("~/Documents/GitHub/publication_model/interval/interval_short 1 200 2026-03-08 18:21:58.568657 .csv", header = F)
-      short_results2 = read.csv("~/Documents/GitHub/publication_model/interval/interval_short 2 200 2026-03-08 18:22:52 .csv", header = F)
-      short_results3 = read.csv("~/Documents/GitHub/publication_model/interval/interval_short 3 200 2026-03-08 18:23:29.279242 .csv", header = F)
-      # intermed_results1 = read.csv("~/Documents/GitHub/publication_model/interval/intermed_interval 1 200 2026-03-23 12:08:35.668753 .csv", header = F)
-      # intermed_results2 = read.csv("~/Documents/GitHub/publication_model/interval/intermed_interval 3 200 2026-03-23 12:22:18 .csv", header = F)
-      # intermed_results3 = read.csv("~/Documents/GitHub/publication_model/interval/intermed_interval 4 67 2026-03-28 16:03:51.278233 .csv", header = F)
-      # intermed_results4 = read.csv("~/Documents/GitHub/publication_model/interval/intermed_interval 6 66 2026-03-28 16:04:59 .csv", header = F)
-      # intermed_results5 = read.csv("~/Documents/GitHub/publication_model/interval/intermed_interval 2 200 2026-03-23 12:10:51.441292 .csv", header = F)
-      # intermed_results6 = read.csv("~/Documents/GitHub/publication_model/interval/intermed_interval 5 67 2026-03-28 16:04:16.559546 .csv", header = F)
-      # short_results1 = read.csv("~/Documents/GitHub/publication_model/interval/interval_short 4", header = F)
+  results = read.csv("~/Documents/GitHub/publication_model/interval/interval 1000 2026-08-04 09:02:49.553642 .csv",header = F)
   # results = results[,-1]
-  results =  rbind(results,results2,results3,results4,short_results1,short_results2,short_results3)#,intermed_results6,intermed_results5,intermed_results4,intermed_results3,intermed_results2,intermed_results1)
+  # results =  rbind(results,results2,results3,results4,short_results1,short_results2,short_results3,short_results4)#,intermed_results6,intermed_results5,intermed_results4,intermed_results3,intermed_results2,intermed_results1)
   colnames(results)= c('survived','interval','rep','final_time','genotype','max_time',
                        'death_rate','seed')
-  reps = 200
+  reps = 1000
   colnames(results)= c('survived','interval','rep','final_time','genotype','max_time',
                        'death_rate','final_size')
   results = results[-which(results$interval==1), ]
@@ -53,6 +40,7 @@
   results_sum$genotype = factor(results_sum$genotype)
   results_sum$lower = binconf(results_sum$survival_rate*reps,reps)[,2]
   results_sum$upper = binconf(results_sum$survival_rate*reps,reps)[,3]
+  results_sum = results_sum[-which(results_sum$death_rate == 1e-4),] ##remove intermediate death rate replicates, not sufficiently different to be visual clear
   survival = ggplot(data = results_sum, aes(x=interval/280.4095 * 30,y=survival_rate,linetype = death_rate,color = genotype))+
     geom_line(size = 1.5)+
     scale_color_manual(values = c('#F8766D','#000000'))+
@@ -112,7 +100,7 @@
   plot(legend2)
   # fig2 = grid.arrange(survival,sizes,get_legend(legend), layout_matrix = rbind(c(1,1,1,1,3),c(1,1,1,1,3),c(1,1,1,1,3),c(2,2,2,2,NA),c(2,2,2,2,NA)))
   # plot(fig2)
-  # ggsave('survival.png',survival,height =3.5,width = 5.25)
+  ggsave('survival.png',survival,height =4.5,width = 7.85)
   # ggsave('sizes.png',sizes,height =3.5,width = 5.25)
   # ggsave('legend.png',legend,height =3.5,width = 5.25)
   # ggsave2('fig2',fig2)

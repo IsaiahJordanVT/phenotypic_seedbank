@@ -19,7 +19,7 @@
   
   ##the cost of expressing the phenotype, ie how much longer you expect to stay in the penalty box than you would expect to wait to grow outside of it
   cost = 5 ##
-  allowed_error = 0.005
+  allowed_error = 0.05
   
   ##Michealis - Menten constants for death caused by toxin. hill_coef gives steepness of killing curve
   hill_coef = 15 ##
@@ -53,18 +53,10 @@
   vbmax_equibpop_determination = function(dormancy_rate,resuscitation_rate,spont_death){
   ##initialize variable to numerically determine the value of vbmax at equilibrium under the specified parameters
   vbmax = 1
-  eigen_diff = 1
-  old_eigen_diff = 1
-  step = 1e-1
   leslie_rows = stages * 2
   
-  while (
-    abs(eigen_diff) > 1e-15){
-    
-    ##add some number to current vbmax
-    vbmax = vbmax + step
-    
     ##calculate new leslie matrix
+    make_leslie = function(vbmax,dormancy_rate,resuscitation_rate,spont_death){
     leslie = matrix(nrow = leslie_rows,ncol = leslie_rows,0)
     leslie[leslie_rows/2+1,leslie_rows] = 2 * growth_rate(c_eq,vbmax,1) 
     inc = 1
@@ -83,26 +75,16 @@
       leslie[inc,i] = leslie[inc,i] + resuscitation_rate
       inc = inc + 1
     }
+    return(leslie)
+    }
     
     ##find difference between 1 and first eigenvalue of the leslie matrix
-    eigen_diff =as.numeric( 1 - abs(eigen(leslie)$values[1]))
-    
-    ##adjust step size 
-    if (
-      abs(eigen_diff) < abs(old_eigen_diff)){
-    } else {
-      step = -step * .9
+    eigs = function(vbmax,dormancy_rate,spont_death){
+      leslie = make_leslie(vbmax,dormancy_rate,resuscitation_rate,spont_death)
+      eigen_diff =as.numeric( 1 - abs(eigen(leslie)$values[1]))
     }
-    if (c_eq < 0){
-      c_eq = 0
-      step = abs(step)
-    }
-   old_eigen_diff = eigen_diff
-   # print(eigen_diff)
-  }
-  
-
-
+  vbmax = uniroot(eigs,dormancy_rate = dormancy_rate,spont_death= spont_death,interval = c(-0,1),extendInt = "yes",maxiter = 10^8)$root
+  leslie = make_leslie(vbmax,dormancy_rate,resuscitation_rate,spont_death)
   tmp_mat = matrix(0, nrow = pheno_bins, ncol = stages)
   popul = list("active" = tmp_mat,"dormant" = tmp_mat, "induced" = tmp_mat, "non-dormant" = tmp_mat,"non-dormant-induced" = tmp_mat)
   ##confusingly, dormants are the first half of the leslie matrix and actives are the second half
@@ -113,16 +95,11 @@
   popul[[1]][1,] = round(N * as.numeric(eigen(leslie)$vector[(leslie_rows/2 + 1):(leslie_rows),1]/sum(eigen(leslie)$vector[,1])))
   pop_vec = matrix(c(popul[[2]][1:3],popul[[1]][1:3]))
   pv= pop_vec
-  for (i in 1:1000000){
-    # pop_vec = leslie %*% pop_vec
-  }
   pop_vec = round(pop_vec)
   print(pop_vec[4:6])
   vmax_carb_active <<- source / (N * (sum(popul[[1]])/sum(popul[[1]]+popul[[2]])) * (c_eq /(km_carb + c_eq)))
-
   return(list(popul=popul,vbmax=vbmax))
   }
   popul = vbmax_equibpop_determination(dormancy_rate,resuscitation_rate,spont_death)[[1]]
   vbmax = vbmax_equibpop_determination(dormancy_rate,resuscitation_rate,spont_death)[[2]]
-  sum(popul[[1]])/sum(popul[[1]]+popul[[2]])
   
