@@ -4,7 +4,7 @@
   registerDoParallel(cores = 5)
   
   max_time = 3501
-  reps = 200
+  reps = 10
   seed = 1
   tmp_fn = paste('tmp')
   first_pulse = 1
@@ -16,7 +16,8 @@
   dorm_param_fn = paste('dormancy_rate_params',reps, Sys.time())
   res_fn = paste('dormancy_rate_res',reps, Sys.time())
   res_param_fn = paste('dormancy_rate_res_params',reps,seed, Sys.time())
-  param_space = 10^seq(-14,-9,.5) 
+  param_space = 10^seq(-14,-1,.5) 
+  param_space = c(param_space,0)
   res_param_space = 10^seq(-13,-.1,.75)
   seeds = sample.int(10^9,reps*length(param_space)*length(res_param_space))
   
