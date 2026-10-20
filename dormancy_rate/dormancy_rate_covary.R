@@ -4,7 +4,7 @@
   registerDoParallel(cores = 5)
   
   max_time = 3501
-  reps = 10
+  reps = 200
   seed = 1
   tmp_fn = paste('tmp')
   first_pulse = 1

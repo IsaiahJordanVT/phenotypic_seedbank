@@ -1,34 +1,15 @@
 library(ggplot2)
-library(geomtextpath)
 library(scales)
+library(geomtextpath)
 
-param_space = 10^seq(-9,-1,.35)
-res_param_space = 10^seq(-13,-.1,.75)
-file_path <- '~/Documents/GitHub/publication_model/dormancy_rate/dormancy_rate 200 1 2026-08-24 12:28:29.694037'
+file_path <- '~/Documents/GitHub/publication_model/dormancy_rate/dormancy_rate 200 1 2026-10-14 15:23:37.425772'
 results_1 <- read.csv(file = file_path, header = FALSE)
-
-set.seed(1)
-reps <- 200
-total_seeds <- reps * length(param_space) * length(res_param_space)
-seeds <- sample.int(10^9, total_seeds)
-
-dorm_param <- as.numeric(results_1[, 2])
-rep_val    <- as.numeric(results_1[, 4])
-seed_val   <- as.integer(round(as.numeric(results_1[, 6])))
-
-inds <- match(seed_val, seeds)
-
-l <- match(round(dorm_param,9), round(param_space,9))
-
-ks <- as.integer(round(((inds - rep_val - (reps * length(res_param_space) * (l - 1))) / reps) + 1))
-
-results_1[, 3] <- res_param_space[ks]
 results = aggregate(results_1[,1],by=results_1[,c(2,3)],FUN = mean)
 colnames(results) = c("Dormancy","Resuscitation",'Survival')
 
 frac_pops = data.frame(matrix(nrow = 0,ncol=3))
-frac_pops_param_space = 10^seq(-9,-1,.15)
-frac_pops_res_param_space = 10^seq(-13,-.1,.15)
+param_space = 10^seq(-14,-1,.5)
+res_param_space = 10^seq(-13,-.1,.75)
 colnames(frac_pops)= c("Dormancy",'Resuscitation','Fraction')
 for(i in param_space){
   for(k in res_param_space){

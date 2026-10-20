@@ -6,12 +6,12 @@ library(cowplot)
 set.seed(25)
 scaleFUN <- function(x) sprintf("%.0f", x)
 popul = vbmax_equibpop_determination(dormancy_rate,resuscitation_rate,spont_death)[[1]]
-# dorm = simulation(popul,cost = 5, hetero,vbmax,init_carb = c_eq,max_time = (3701), toxin_times = c(1,3401), toxin_strength = c(4,20),
-# init_ts = 0.083,spont_death = spont_death,dormancy_rate = dormancy_rate, d_r = d_r)
+dorm = simulation(popul,cost = 5, hetero,vbmax,init_carb = c_eq,max_time = (3701), toxin_times = c(1,3401), toxin_strength = c(4,20),
+init_ts = 0.083,spont_death = spont_death,dormancy_rate = dormancy_rate, d_r = d_r)
 popul[[1]] = popul[[1]] + popul[[2]]
 popul[[2]] = popul[[3]]
-# no_dorm = simulation(popul,cost = 5, hetero,vbmax,init_carb = c_eq,max_time = (3701),toxin_times = c(1,3401), toxin_strength = c(4,20),
-# init_ts = 0.083,spont_death = spont_death,dormancy_rate = 0,d_r= d_r)
+no_dorm = simulation(popul,cost = 5, hetero,vbmax,init_carb = c_eq,max_time = (3701),toxin_times = c(1,3401), toxin_strength = c(4,20),
+init_ts = 0.083,spont_death = spont_death,dormancy_rate = 0,d_r= d_r)
 dorm_init = as.data.frame(cbind(rowSums(dorm$pops[,,min(which(dorm$tox_list>3.8))+500]),c(1:15)))
 dorm_pre = as.data.frame(cbind(rowSums(dorm$pops[,,min(which(dorm$tox_list>19.8))]),c(1:15)))
 dorm_post = as.data.frame(cbind(rowSums(dorm$pops[,,min(which(dorm$tox_list>19.8)+200)]),c(1:15)))
