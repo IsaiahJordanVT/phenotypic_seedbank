@@ -2,7 +2,7 @@ library(ggplot2)
 library(scales)
 library(geomtextpath)
 
-file_path <- '~/Documents/GitHub/publication_model/dormancy_rate/dormancy_rate 200 1 2026-10-14 15:23:37.425772'
+file_path <- '~/Documents/GitHub/Phenotypic_seedbank/dormancy_rate/dormancy_rate 200 1 2026-10-14 15:23:37.425772'
 results_1 <- read.csv(file = file_path, header = FALSE)
 results = aggregate(results_1[,1],by=results_1[,c(2,3)],FUN = mean)
 colnames(results) = c("Dormancy","Resuscitation",'Survival')
@@ -25,10 +25,12 @@ for(i in param_space){
   }
 }
 colnames(frac_pops)= c("Dormancy",'Resuscitation','Fraction')
-ggplot(data = results, aes(x = as.numeric(Dormancy), y = as.numeric(Resuscitation), z = as.numeric(Survival))) +
+frac_pops$Dormancy = frac_pops$Dormancy/280.4095 * 30
+frac_pops$Resuscitation = frac_pops$Resuscitation/280.4095 * 30
+ggplot(data = results, aes(x = as.numeric(Dormancy)/280.4095 * 30, y = as.numeric(Resuscitation)/280.4095 * 30, z = as.numeric(Survival))) +
   geom_contour_filled(breaks = c(seq(0, 1.1, .1))) +
-  xlab("Dormancy") +
-  ylab("Resuscitation") +
+  xlab("Dormancy Rate") +
+  ylab("Resuscitation Rate") +
   geom_textcontour(data = subset(frac_pops, Fraction > 0),
                    aes(
                      x = Dormancy, 
@@ -55,7 +57,7 @@ ggplot(data = results, aes(x = as.numeric(Dormancy), y = as.numeric(Resuscitatio
                 labels = trans_format("log10", math_format(10^.x))) +
   
   scale_size_binned(n.breaks = 25) + 
-  geom_point(aes(x = dormancy_rate, y = resuscitation_rate), color = 'orange', size = 4,pch = 8) +
+  geom_point(aes(x = dormancy_rate/280.4095 * 30, y = resuscitation_rate/280.4095 * 30), color = 'orange', size = 4,pch = 8) +
   theme_classic()+
   theme(text = element_text(size = 25))
 mixed = results
